@@ -83,7 +83,7 @@ public class Tips {
         Executors.newCachedThreadPool(); //可缓存
         Executors.newScheduledThreadPool(2);
         System.out.println(Runtime.getRuntime().availableProcessors());
-        //
+        //1
 
     }
 
