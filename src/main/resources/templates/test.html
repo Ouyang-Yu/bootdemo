@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<p th:text="${msg}">ha</p>
+<!--有什么输出什么-->
+<p th:utext="${msg}">ha</p>
+<!--转义value中的html元素-->
+
+<h2 th:each="item:${list}">  [[${item}]]  </h2>
+</body>
+</html>
