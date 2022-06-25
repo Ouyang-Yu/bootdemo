@@ -1,4 +1,4 @@
-package a杂;
+package a综合;
 
 import org.junit.jupiter.api.Test;
 

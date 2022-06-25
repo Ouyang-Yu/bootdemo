@@ -1,4 +1,4 @@
-package a杂;
+package a综合;
 
 import lombok.extern.slf4j.Slf4j;
 

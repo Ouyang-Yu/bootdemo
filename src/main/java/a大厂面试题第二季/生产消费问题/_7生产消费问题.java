@@ -1,4 +1,4 @@
-package a大厂面试题第二季;
+package a大厂面试题第二季.生产消费问题;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;

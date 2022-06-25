@@ -1,4 +1,4 @@
-package a杂;
+package a综合;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -10,6 +10,7 @@ import java.time.format.DateTimeFormatter;
 public class TimeAPI {
     public static void main(String[] args) {
         LocalDateTime now = LocalDateTime.now();
+
         DateTimeFormatter inFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         DateTimeFormatter outFormat = DateTimeFormatter.ofPattern("EEE, MMM d yyyy, KK:mm a");
         System.out.println(now); //2022-05-08T16:34:17.744841800
@@ -23,7 +24,7 @@ public class TimeAPI {
         System.out.println(now.getMinute());
         System.out.println(now.getSecond());
 
-        String format = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(LocalDateTime.now());
     }
 }
