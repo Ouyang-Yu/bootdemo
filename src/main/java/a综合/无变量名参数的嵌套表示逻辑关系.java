@@ -10,6 +10,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.File;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
@@ -17,7 +18,7 @@ import java.util.Base64;
  * @author ouyangyu369@gmail.com
  * @date 2022-06-24  16:18
  */
-public class 代码层次表示逻辑关系其实就是参数的嵌套 {
+public class 无变量名参数的嵌套表示逻辑关系 {
 
 
     public String before() {
@@ -53,18 +54,18 @@ public class 代码层次表示逻辑关系其实就是参数的嵌套 {
         String filePath = "文件路径地址";
         String auth = "用户admin" + ":" + "密码123456";
         return new RestTemplate()
-                .exchange(
+                .exchange(//4 args
                         url,
                         HttpMethod.POST,
-                        new HttpEntity<>(
-                                new LinkedMultiValueMap<>() {{
+                        new HttpEntity<>( //2 args
+                                new LinkedMultiValueMap<String,Object>() {{
                                     add("file", new FileSystemResource(new File(filePath)));
                                     add("name", "test_template");
                                     add("fileName", "test_template.xlsx");
                                 }},
                                 new HttpHeaders() {{
                                     set("Authorization", "Basic " + new String(
-                                            Base64.getEncoder().encode(auth.getBytes(StandardCharsets.UTF_8))));
+                                            Base64.getEncoder().encode(auth.getBytes(Charset.defaultCharset()))));
                                     set("Content-Type", "multipart/form-data");
                                 }}
                         ),

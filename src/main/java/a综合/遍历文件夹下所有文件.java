@@ -9,21 +9,25 @@ import java.util.Objects;
  * @time 2022-06-22 16:13
  */
 public class 遍历文件夹下所有文件 {
-    static ArrayList<File> files = new ArrayList<>();
+
     public static void main(String[] args) {
         String path = "C:\\Users\\ouyan\\Desktop\\国信\\02_ware Workstation Pro 16";
-//        File file = new File(path);
-//        ArrayList<File> files = readAllFile(file,new ArrayList<>());
 
         getFiles(path)
                 .forEach(System.out::println);
     }
 
-   static ArrayList<File> getFiles(String path) {
+   static ArrayList<File> getFiles(String path) { //封装隐藏细节,外面只需要提供path
 
         return readAllFile(new File(path), new ArrayList<>());
     }
 
+    /**
+     *
+     * @param file
+     * @param files
+     * @return
+     */
     private static ArrayList<File> readAllFile(File file,ArrayList<File> files) {
 
 

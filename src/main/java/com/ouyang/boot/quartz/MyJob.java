@@ -27,12 +27,12 @@ public class MyJob implements Job {
          * 1.getJobDataMap 根据key取值
          * 2.定义变量set方法,接受同名key的value值
          */
-        JobDataMap jobDetailMap = context.getJobDetail().getJobDataMap();
-        JobDataMap triggerMap = context.getTrigger().getJobDataMap();
-        JobDataMap mergedMap = context.getMergedJobDataMap();
-
-        String one = jobDetailMap.getString("one");
-        String two = triggerMap.getString("two");
-        System.out.println("name = " + name);
+//        JobDataMap jobDetailMap = context.getJobDetail().getJobDataMap();
+//        JobDataMap triggerMap = context.getTrigger().getJobDataMap();
+//        JobDataMap mergedMap = context.getMergedJobDataMap();
+//
+//        String one = jobDetailMap.getString("one");
+//        String two = triggerMap.getString("two");
+//        System.out.println("name = " + name);
     }
 }

@@ -9,14 +9,14 @@ import org.quartz.impl.StdSchedulerFactory;
  */
 public class MyQuartz {
     public static void main(String[] args) throws SchedulerException {
-        JobDetail jobDetail = JobBuilder.newJob(MyJob.class)
+        JobDetail jobDetail = JobBuilder.newJob(MyJob.class)//set job
                 .withIdentity("job1", "group1")
-                .usingJobData("one","a")
+                //.usingJobData("one","a")
                 .build();
 
         SimpleTrigger trigger = TriggerBuilder.newTrigger()
                 .withIdentity("trigger1", "group1")
-                .usingJobData("two","b")
+                //.usingJobData("two","b")
                 .startNow()
                 .withSchedule(SimpleScheduleBuilder.simpleSchedule().withIntervalInSeconds(2).repeatForever())
                 .build();

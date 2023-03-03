@@ -1,4 +1,4 @@
-package a综合;
+package a大厂面试题第二季;
 
 import java.util.concurrent.*;
 import java.util.function.BiConsumer;
@@ -8,7 +8,7 @@ import java.util.function.BiFunction;
  * @author Ouyang
  * @date 2022-04-19  16:48
  */
-public class MyCompletableFuture {
+public class                       MyCompletableFuture {
     static ThreadPoolExecutor executor = new ThreadPoolExecutor(
             Runtime.getRuntime().availableProcessors() + 1,
             10,
@@ -19,7 +19,10 @@ public class MyCompletableFuture {
             new ThreadPoolExecutor.AbortPolicy()
     );
 
+
     public static void main(String[] args) throws ExecutionException, InterruptedException {
+
+
         CompletableFuture<Void> future1 = CompletableFuture.runAsync(
                         () -> System.out.println("task 1: subThread execute" + Thread.currentThread().getName()),
                         executor
