@@ -1,4 +1,4 @@
-package a综合.aop打印接口出入参和执行时间;
+package 代码积累库.aop打印接口出入参和执行时间;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -15,13 +15,9 @@ public class Ttt {
     public static void main(String[] args)  {
 
 
-      //  te(null);  //jetbrains的   IDE有提示且运行会报错
+        te(null);  //jetbrains的   IDE有提示且运行会报错
         aa(null);  //Spring的     IDE有提示但是可以运行
-        //bb(null);  //lombok 自动加的try catch
-
-        for (int i = 0; i < 500000000; i++) {
-
-        }
+        bb(null);  //lombok 自动加的try catch
 
     }
 

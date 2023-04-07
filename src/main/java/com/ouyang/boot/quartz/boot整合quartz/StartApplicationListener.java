@@ -27,7 +27,7 @@ public class StartApplicationListener implements ApplicationListener<ContextRefr
         if (trigger == null) {
             trigger = TriggerBuilder.newTrigger()
                     .withIdentity(triggerKey)
-                    .withSchedule(CronScheduleBuilder.cronSchedule("0/5 * * * * ?"))
+                    .withSchedule(CronScheduleBuilder.cronSchedule("*/5 * * * * ?"))
                     .startNow()
                     .build();
 

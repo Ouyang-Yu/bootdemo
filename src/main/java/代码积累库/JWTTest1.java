@@ -1,4 +1,4 @@
-package a综合;
+package 代码积累库;
 
 import io.jsonwebtoken.*;
 
@@ -9,7 +9,7 @@ import java.util.UUID;
  * @author ouyangyu369@gmail.com
  * @time 2022-05-07 20:00
  */
-public class JWTTest {
+public class JWTTest1 {
 
     private static String signature;
 

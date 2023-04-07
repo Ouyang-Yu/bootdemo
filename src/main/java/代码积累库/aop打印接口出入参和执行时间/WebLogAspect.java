@@ -1,4 +1,4 @@
-package com.ouyang.boot.AOP;
+package 代码积累库.aop打印接口出入参和执行时间;
 
 
 import lombok.extern.slf4j.Slf4j;
@@ -14,14 +14,15 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * @author ouyangyu369@gmail.com
  * @time 2022-06-18 12:50
+ *
  */
 @Aspect
 @Component
 @Slf4j
 public class WebLogAspect {
-    @Pointcut("@annotation(WebLog)")
+    @Pointcut("@annotation(代码积累库.aop打印接口出入参和执行时间.WebLog)")
     public void method() {
-
+        //假设method是被webLog注解的方法
     }
 
     @Before("method()")
@@ -38,11 +39,6 @@ public class WebLogAspect {
         log.info("方法的入参:{}", joinPoint.getArgs());
     }
 
-    @After("method()")
-    public void doAfter() {
-        log.info("=========================================== End ===========================================");
-    }
-
     @Around("method()")
     public Object doAround(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
         long start = System.currentTimeMillis();
@@ -50,5 +46,10 @@ public class WebLogAspect {
         log.info("方法出参:{}", result);
         log.info("time consume:{}", System.currentTimeMillis() - start);
         return result;
+    }
+
+    @After("method()")
+    public void doAfter() {
+        log.info("=========================================== End ===========================================");
     }
 }

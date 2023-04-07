@@ -1,4 +1,4 @@
-package a综合;
+package 代码积累库;
 
 import org.apache.tomcat.util.threads.ThreadPoolExecutor;
 import org.jetbrains.annotations.NotNull;
@@ -50,12 +50,7 @@ public class 线程池 {
         String s = future.get();
 
 
-        FutureTask<Integer> futureTask = new FutureTask<>(new Callable<Integer>() {
-            @Override
-            public Integer call() throws Exception {
-                return 1;
-            }
-        });
+        FutureTask<Integer> futureTask = new FutureTask<>(() -> 1);
         threadPool.submit(futureTask);
         futureTask.get();
 
@@ -128,6 +123,7 @@ public class 线程池 {
 
             System.out.println("T2:拿茶叶...");
             sleep(1, TimeUnit.SECONDS);
+
             return "龙井";
         });
 

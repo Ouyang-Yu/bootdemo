@@ -1,7 +1,16 @@
 package 代码积累库;
 
+import cn.hutool.core.util.StrUtil;
+import com.google.common.base.Strings;
 import org.junit.jupiter.api.Test;
+import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
+import java.text.MessageFormat;
+import java.util.Map;
+import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -11,12 +20,42 @@ import java.util.stream.Stream;
  */
 
 public class String处理 {
+    @Test
+    public void strmatch() {
+        System.out.println("123".contains("12"));
+        String sentence = "I love reading books. My favorite book is Harry Potter.";
+        //表示只匹配单词,不匹配bookstore这种,大写B才是后者
+        Matcher matcher = Pattern.compile("\\bbook\\b").matcher(sentence);
+        while (matcher.find()) {
+            System.out.println("Found at index " + matcher.start() + " - " + matcher.end());
+        }
+    }
+
+    @Test
+    public void emptyutils() {
+        System.out.println(Strings.isNullOrEmpty("")); //guava
+        System.out.println(StrUtil.isBlank("    ")); //hutool
+        System.out.println(StrUtil.isEmpty(""));
+        System.out.println("StringUtils.hasLength(\"\") = " + StringUtils.hasLength("")); //spring
+        System.out.println("StringUtils.hasText(\"     \") = " + StringUtils.hasText("     "));
+        System.out.println("ObjectUtils.isEmpty(Optional.of(null)) = " + ObjectUtils.isEmpty(Optional.empty()));
+
+    }
+
+    @Test
+    public void format() {
+        String format = MessageFormat.format("{0}123", 1);
+        String format1 = String.format("%s", 213);
+        String format2 = StrUtil.format("{}{}", 1,2);
+
+    }
     /**
      * string format 用法
      * William James Smiths 转化为 Smiths,William.J
      */
-    public  String parseName(String name) {
+    public String parseName(String name) {
         String[] words = name.split(" ");
+//        MessageFormat.format("{0},{1}.{2}",)
         return String.format(
                 "%s,%s.%c",
                 words[2],
@@ -32,12 +71,12 @@ public class String处理 {
      */
     @Test
     public void count() {
-        Stream.of("abcc".split(""))
+        Map<String, Long> map = Stream.of("abcc".split(""))
                 .collect(Collectors.groupingBy(
                         String::toString,
                         Collectors.counting()
-                ))
-                .forEach((k, v) -> System.out.println(k + "   :   " + v));
+                ));
+        map.forEach((k, v) -> System.out.println(k + "   :   " + v));
     }
 
 }

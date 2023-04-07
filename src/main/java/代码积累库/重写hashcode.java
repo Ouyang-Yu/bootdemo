@@ -1,4 +1,4 @@
-package a综合;
+package 代码积累库;
 
 import java.util.HashMap;
 import java.util.Objects;
@@ -7,26 +7,7 @@ import java.util.Objects;
  * @author ouyangyu369@gmail.com
  * @date 2022-06-24  17:23
  */
-class AAA {
-    Integer a;
 
-    public AAA(Integer a) {
-        this.a = a;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        AAA aaa = (AAA) o;
-        return Objects.equals(a, aaa.a);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(a);
-    }
-}
 public class 重写hashcode {
 
     public static void main(String[] args) {
@@ -42,5 +23,29 @@ public class 重写hashcode {
         map.forEach((key, value) -> System.out.println(value));
         map.put("a", after);
         map.forEach((key, value) -> System.out.println(value));
+    }
+    static class AAA {
+        Integer a;
+
+        public AAA(Integer a) {
+            this.a = a;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
+            AAA aaa = (AAA) o;
+            return Objects.equals(a, aaa.a);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(a);
+        }
     }
 }

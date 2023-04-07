@@ -1,17 +1,18 @@
 package 代码积累库;
 
+import cn.hutool.Hutool;
+import cn.hutool.core.io.IoUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
+import org.springframework.util.DigestUtils;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.stream.Collectors;
@@ -23,15 +24,19 @@ import java.util.stream.Stream;
  */
 @Slf4j
 public class 文件IO {
+
+    @Test
+    public void readFile() throws FileNotFoundException {
+        Hutool.getAllUtils().forEach(System.out::println);
+        String s = IoUtil.toStr(new ByteArrayOutputStream(1), StandardCharsets.UTF_8);
+        byte[] bytes = DigestUtils.md5Digest("".getBytes(StandardCharsets.UTF_8));
+    }
     @Test
     public void s() throws IOException {
         //从文件读取行内容 到流 并统计每个字符出现次数
         Files.lines(Paths.get(".gitignore"), Charset.defaultCharset())
                 .flatMap(s -> Stream.of(s.split("")))
-                .collect(Collectors.groupingBy(
-                        String::toString, // means   s->s
-                        Collectors.counting()
-                ))
+                .collect(Collectors.groupingBy(String::toString, Collectors.counting()))
                 .forEach((k, v) -> System.out.println(k + ":" + v));
     }
 
@@ -63,23 +68,26 @@ public class 文件IO {
         return method.invoke(object, parameters);
     }
 
+
     @Test
     public void sda() {
         deleteExpiredFiles("", 2);
     }
+
     /**
      * 删除给定路径下所有过期文件,包括嵌套的文件
+     *
      * @param fromDir 文件夹路径
-     * @param expire  过期多少天了的应该被删除
+     * @param dayExpired  过期多少天了的应该被删除
      * @return 删除成功的文件个数
      */
-    public  Integer deleteExpiredFiles(@NotNull String fromDir, @NotNull Integer expire) {
+    public Integer deleteExpiredFiles(@NotNull String fromDir, @NotNull Integer dayExpired) {
         File srcDir = new File(fromDir);
         if (!srcDir.exists()) {
             return 0;
         }
         File[] files = srcDir.listFiles();
-        if (files == null || files.length <= 0) {
+        if (files == null || files.length == 0) {
             return 0;
         }
 
@@ -87,7 +95,7 @@ public class 文件IO {
         for (File file : files) {
             if (file.isFile()) {
                 long day = Math.abs(file.lastModified() - System.currentTimeMillis()) / (1000 * 60 * 60 * 24);
-                if (day >= expire) {
+                if (day >= dayExpired) {
                     if (file.delete()) {
                         count[0]++;
                     } else {
@@ -95,11 +103,11 @@ public class 文件IO {
                     }
                 }
             } else {
-                deleteExpiredFiles(file.getAbsolutePath(), expire);
+                deleteExpiredFiles(file.getAbsolutePath(), dayExpired);
             }
         }
         Stream.of(files)
-                .filter(it -> System.currentTimeMillis() - it.lastModified() >= expire)
+                .filter(it -> System.currentTimeMillis() - it.lastModified() >= dayExpired)
                 .forEach(file -> {
                     if (file.delete()) {
                         count[0]++;

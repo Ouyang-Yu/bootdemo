@@ -1,4 +1,4 @@
-package a综合;
+package 代码积累库;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -29,7 +29,6 @@ public class 遍历文件夹下所有文件 {
      * @return
      */
     private static ArrayList<File> readAllFile(File file,ArrayList<File> files) {
-
 
         if (file.isFile()) {
             files.add(file);

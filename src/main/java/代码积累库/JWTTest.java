@@ -3,7 +3,6 @@ package 代码积累库;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.junit.jupiter.api.Test;
 
 import java.util.Date;
 import java.util.Map;
@@ -17,10 +16,7 @@ public class JWTTest {
 
     private static String signature;
 
-@Test
-public void aVoid() {
 
-}
 
     public static String createToken(Map<String,Object> claims) {
         return Jwts.builder()

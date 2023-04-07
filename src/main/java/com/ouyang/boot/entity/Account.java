@@ -14,14 +14,14 @@ import javax.persistence.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+
 @Entity
-@Table  //默认对应同名表,没有就创建一个同名表
+@Table  //默认对应同名表,支持驼峰映射,没有就创建一个同名表,也可以name属性指定映射
 public class Account {
-    @Column
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)//没有指定id 时 ,怎么自动生成
-    @Id
+    @Id//表示主键
     Integer id;
 
-    @Column
-    String name;
+    String name; //如果同名不需要加column
 }
