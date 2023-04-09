@@ -1,4 +1,4 @@
-package 代码积累库;
+package 代码积累库.工具类;
 
 import cn.hutool.cache.Cache;
 import cn.hutool.cache.CacheUtil;

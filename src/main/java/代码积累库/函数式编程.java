@@ -4,9 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
@@ -107,10 +113,69 @@ public class 函数式编程 {
         //方法作为类的实例
         executeIfParamNotNull(System.out::println, new Random().nextBoolean() ? 1 : null);
         executeIfParamNotNull.accept(System.out::println, new Random().nextBoolean() ? 1 : null);
-        //用高阶函数优点是不同起临时变量,更优雅更装逼
+        //用高阶函数代替下面函数,优点是不同起临时变量,更优雅更装逼,用kt可以给话甚至可以给consumer起一个拓展函数
         Integer integer = new Random().nextBoolean() ? 1 : null;
         if (integer != null) {
             System.out.println(integer);
         }
     }
+
+    public static <T, R> R retryFunction(Function<T, R> function, T param, int time) {
+        while (true) {
+            try {
+                return function.apply(param);
+            } catch (Exception e) {
+                time--;
+                if (time <= 0) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+    }
+    public static <T, R> R cacheFunction(Function<T, R> function, T param, Map<T, R> cache) {
+        R r = cache.get(param);
+        if (r != null) {
+            return r;
+        }
+        R result = function.apply(param);
+        cache.put(param,result);
+        return result;
+    }
+    public  <T, R> R logFunction(Function<T, R> function, T t, String logTitle) {
+
+
+        Logger log = LoggerFactory.getLogger(this.getClass());
+        long startTime = System.currentTimeMillis();
+
+        log.info("param={},requestTime={}",
+                t.toString(),
+                LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+        );
+        R apply = function.apply(t);
+        long endTime = System.currentTimeMillis();
+        log.info("title={},return={},spendTime={}ms",
+                logTitle,
+                apply.toString(),
+                endTime - startTime
+        );
+        return apply;
+    }
+    @Test
+    public void logFun() {
+        int s = logFunction(String::length, "123", "1");
+    }
+
+
+    public static void main(String[] args) {
+        //http调用，失败会重试3次
+       // retryFunction(()->http.call(),3);
+        //把数字1转成数字 失败会重试三次
+        String s = retryFunction(String::valueOf, 1, 3);
+        String ss = retryFunction(String::valueOf, 1, 3);
+
+        cacheFunction(String::valueOf, 2, new HashMap<>());
+    }
+
+
+
 }

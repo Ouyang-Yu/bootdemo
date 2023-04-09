@@ -1,4 +1,4 @@
-package 代码积累库;
+package 代码积累库.语言;
 
 import java.util.HashMap;
 import java.util.Objects;

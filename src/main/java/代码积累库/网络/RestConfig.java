@@ -1,4 +1,4 @@
-package 代码积累库;
+package 代码积累库.网络;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

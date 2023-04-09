@@ -1,4 +1,4 @@
-package 代码积累库;
+package 代码积累库.数据库;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import org.apache.ibatis.reflection.MetaObject;

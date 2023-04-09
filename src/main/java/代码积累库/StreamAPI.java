@@ -14,6 +14,7 @@ import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 /**
  * @author ouyangyu369@gmail.com
@@ -22,6 +23,8 @@ import java.util.stream.IntStream;
 
 
 public class StreamAPI {
+    //
+
     @Test
     public void chars() {
         String collect = String.join(":", "foobar", "foo", "bar")
@@ -31,7 +34,10 @@ public class StreamAPI {
                 .sorted()
                 .collect(Collectors.joining(","));
         System.out.println(collect);
-
+        boolean x = Stream.of("11", "21").anyMatch("211"::contains);
+        System.out.println(x);
+        boolean x1 = Stream.of("11", "21").anyMatch(s -> s.contains("11"));
+        System.out.println(x1);
     }
 
     @Test
