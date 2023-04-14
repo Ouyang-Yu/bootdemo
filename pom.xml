@@ -218,9 +218,14 @@
             <version>3.5.3.1</version>
         </dependency>
         <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-core</artifactId>
-            <version>3.5.2</version>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-lombok</artifactId>
+            <version>1.8.10</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-daemon</artifactId>
+            <version>1.8.10</version>
         </dependency>
 
 

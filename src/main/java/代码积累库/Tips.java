@@ -19,7 +19,28 @@ import java.util.concurrent.atomic.LongAccumulator;
 @Slf4j
 public class Tips {
 
+    @Test
+    public void d() {
+        new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("a");
+            }
+            {//通过子类实现
+                run();
 
+            }
+        };
+    }
+    @Test
+    public void ruoyi() {
+        //        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        //        PageHelper.startPage(
+        //                Convert.toInt(request.getParameter("pageNum"), 1),
+        //                Convert.toInt(request.getParameter("pageSize"), 10),
+        //                SqlUtil.escapeOrderBySql(request.getParameter("orderByColumn"))//非空和sql正则
+        //        ).setReasonable(Convert.toBool(request.getParameter("reasonable")));
+    }
 
 
     /**

@@ -24,6 +24,7 @@ import java.beans.PropertyEditorSupport;
 import java.io.IOException;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAdjusters;
 import java.util.Date;
 
 /**
@@ -31,6 +32,12 @@ import java.util.Date;
  * @time 2022-05-08 16:51
  */
 public class TimeAPI {
+    @Test
+    public void first() {
+        LocalDate first = LocalDate.now().with(TemporalAdjusters.firstDayOfYear());
+        System.out.println(first);
+
+    }
     public static void main(String[] args) {
         LocalDateTime now = LocalDateTime.now();
 

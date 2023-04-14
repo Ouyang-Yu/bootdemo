@@ -7,12 +7,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 import java.util.List;
 
 /**
@@ -43,18 +41,11 @@ public class JPATest {
 
         String age = "";
         int sex = 1;
-        List<Account> all = repository.findAll(new Specification<Account>() {
-            @Override
-            public Predicate toPredicate(Root<Account> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
+        List<Account> all = repository.findAll((Specification<Account>) (root, query, builder) -> builder.and(new Predicate[]{
+                StringUtils.hasText(age) ? null : builder.equal(root.get("age").as(String.class), age),
+                ObjectUtils.isEmpty(sex) ? null : builder.equal(root.get("sex").as(Integer.class), sex),
 
-                return builder.and(new Predicate[]{
-                        StringUtils.isEmpty(age) ? null : builder.equal(root.get("age").as(String.class), age),
-                        StringUtils.isEmpty(sex) ? null : builder.equal(root.get("sex").as(Integer.class), sex),
-
-                });
-            }
-
-        });
+        }));//条件查询
 
     }
 }
