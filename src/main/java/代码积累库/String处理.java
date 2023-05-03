@@ -21,6 +21,16 @@ import java.util.stream.Stream;
 
 public class String处理 {
     @Test
+    public void dsd() {
+
+        "".lines();
+        "".stripLeading();
+        System.out.println("Hello\\nWorld\\tJava".translateEscapes());
+
+    }
+
+
+    @Test
     public void strmatch() {
         System.out.println("123".contains("12"));
         String sentence = "I love reading books. My favorite book is Harry Potter.";

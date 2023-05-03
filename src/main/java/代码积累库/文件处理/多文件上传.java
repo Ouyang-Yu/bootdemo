@@ -4,8 +4,7 @@ import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -29,7 +28,7 @@ public class 多文件上传 {
     private StandardServletMultipartResolver servletMultipartResolver;
 
     @SneakyThrows
-    @RequestMapping(value = "/multiUpload", method = RequestMethod.POST)
+    @PostMapping("/multiUpload")
     public String multiUpload(HttpServletRequest request) {
         if (!servletMultipartResolver.isMultipart(request)) {
             return "not file request";  //不是文件上传的请求

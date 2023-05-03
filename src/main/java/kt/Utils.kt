@@ -5,10 +5,23 @@ package kt
  *  @time   2022-05-17 18:27
  *  @author ouyangyu369@gmail.com
  */
+fun <T : Comparable<T>> myMax(vararg nums: T): T {
+    if (nums.isEmpty()) throw RuntimeException("Params can not be empty.")
+    var maxNum = nums[0]
+    for (num in nums) {
+        if (num > maxNum) {
+            maxNum = num
+        }
+    }
+    return maxNum
+}
+
 
 
 
 fun main() {
+
+    myMax(1,23,3)
     val aaa = "aAcc"
     val message = aaa.replace('a', '1', ignoreCase = true)
     println(message)

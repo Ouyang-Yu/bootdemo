@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -22,7 +21,7 @@ import java.util.Random;
  */
 @RestController
 public class 单文件上传 { //默认配置单个文件大小最大1MB 请求最大10MB
-    private final static String UPLOAD_PATH = "D/img";
+    private final static String UPLOAD_DIR = "D/img/";
 
     @SneakyThrows
     @PostMapping("/upload")
@@ -30,25 +29,26 @@ public class 单文件上传 { //默认配置单个文件大小最大1MB 请求�
         if (file.isEmpty()) {
             return "upload failed";
         }
-        File dir = new File(UPLOAD_PATH);
-        if (!dir.exists()) {
-            dir.mkdir();
-        }
 
         String fileName = file.getOriginalFilename();
+
         assert fileName != null;
-        String newFilePath = UPLOAD_PATH +
+        String newFilePath = UPLOAD_DIR +
                 LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) +
                 new Random().nextInt(100) +
                 fileName.substring(fileName.lastIndexOf("."));
         //新的文件路径  文件夹+时间+随机数+原文件后缀
 
 
-        Path path = Paths.get(newFilePath);
-        if (!Files.exists(path.getParent())) {
-            Files.createDirectories(path.getParent());
+        Path dir = Paths.get(UPLOAD_DIR);
+        if (!Files.exists(dir)) {
+            Files.createDirectories(dir);
         }
-        Files.write(path, file.getBytes(), StandardOpenOption.CREATE_NEW);
+        // Path path = Paths.get(newFilePath);
+        // if (!Files.exists(path.getParent())) {
+        //     Files.createDirectories(path.getParent());
+        // }
+        Files.write(Paths.get(newFilePath), file.getBytes(), StandardOpenOption.CREATE_NEW);
 
         //or file.transferTo(new File(newFilePath));
         return MessageFormat.format("upload succeed {0}",newFilePath);

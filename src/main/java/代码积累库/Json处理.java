@@ -19,7 +19,7 @@ public class Json处理 {
     ;
 
     @Test
-    public void ds() {
+    public void gson() {
 
 
         Gson gson = new Gson();

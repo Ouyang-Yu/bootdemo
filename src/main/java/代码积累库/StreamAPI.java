@@ -11,6 +11,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -24,6 +25,36 @@ import java.util.stream.Stream;
 
 public class StreamAPI {
     //
+    @Test
+    public void range() {
+
+        Stream.iterate(0, integer -> Math.min(integer + 1, 10 - 1))
+                // 从0开始,每次加1,最大值为9,流的长度为10
+                .limit(10)
+                .forEach(index -> {
+                    System.out.println(index + " ");
+                });
+        range(0, 9, 2)
+                .forEach(index ->
+                        System.out.println(index + " ")
+                );
+        range(1, 10, 3)
+                .forEach(index ->
+                        System.out.println(index + " ")
+                );
+        range(1, 9, 1, (index)-> System.out.println(index+"fun"));
+    }
+
+    Stream<Integer> range(Integer min, Integer max, Integer step) {
+        return Stream.iterate(min, integer -> Math.min(integer + step, max))
+                .limit((max - min) / step + 1)
+                ;
+    }
+    void range(Integer min, Integer max, Integer step, Consumer<Integer> consumer) {
+         Stream.iterate(min, integer -> Math.min(integer + step, max))
+                .limit((max - min) / step + 1)
+                .forEach(consumer);
+    }
 
     @Test
     public void chars() {
@@ -42,7 +73,7 @@ public class StreamAPI {
 
     @Test
     public void random() {
-          TreeSet<String> set = new TreeSet<>(String::compareTo);
+        TreeSet<String> set = new TreeSet<>(String::compareTo);
 
         // 随机展示 5 至 20 之间不重复的整数并进行排序
         new Random(47)
@@ -52,7 +83,7 @@ public class StreamAPI {
                 .limit(7)            // 获取前 7 个元素
                 .sorted()               // 排序
                 .forEach(System.out::println);
-        int sum = IntStream.range(1, 10).sum();//55
+        int sum = IntStream.range(1, 10).sum();// 55
 
     }
 
@@ -70,12 +101,12 @@ public class StreamAPI {
                 .mapToInt(User::getId)
                 .sum();//.mapToInt(User::getId).sum();
 
-        users.stream() //max
+        users.stream() // max
                 .filter(it -> it.isVIP)
                 .max(Comparator.comparingInt(User::getId))
                 .orElseThrow();
 
-        users.stream()//sort
+        users.stream()// sort
                 .sorted(Comparator.comparing(User::getName, String.CASE_INSENSITIVE_ORDER)
                         .thenComparing(User::getPwd, String::compareTo)
                         .thenComparingInt(User::getId)
@@ -84,7 +115,7 @@ public class StreamAPI {
 
         IntSummaryStatistics collect2 = users.stream()
                 .filter(it -> it.isVIP)
-                .collect(Collectors.summarizingInt(User::getId));//总结 根据id求最大最小求和平均值和个数
+                .collect(Collectors.summarizingInt(User::getId));// 总结 根据id求最大最小求和平均值和个数
 
     }
 
@@ -135,23 +166,23 @@ public class StreamAPI {
          */
         List<String> collect = users.stream()
                 .filter(it -> it.getId() < 10)
-                .sorted(Comparator.comparing(User::getId))  //从小到大排序
+                .sorted(Comparator.comparing(User::getId))  // 从小到大排序
                 .sorted(Comparator.comparing(User::getName))
                 .map(User::getName)
                 .toList();
         users.stream().collect(Collectors.partitioningBy(User::getIsVIP));
-        //根据是不是vip划分two part,只能接受predicate
+        // 根据是不是vip划分two part,只能接受predicate
 
         Map<Integer, List<User>> collect1 = users.stream().collect(Collectors.groupingBy(User::getId));
         collect1.forEach((key, value) -> System.out.println(key + " = " + value));
-        //根据id 分为多组
+        // 根据id 分为多组
 
         //  collect.forEach(System.out::println);
         Map<Boolean, List<User>> map = users.stream()
                 .collect(Collectors.groupingBy(User::getIsVIP));
-        //将list按照属性分组 ,返回一个map ,key是属性,value是对应的相同属性的元素集合
+        // 将list按照属性分组 ,返回一个map ,key是属性,value是对应的相同属性的元素集合
 
-        map.forEach((k, v) -> System.out.println(k + ":" + v));  //遍历map
+        map.forEach((k, v) -> System.out.println(k + ":" + v));  // 遍历map
     }
 
 
@@ -165,13 +196,13 @@ public class StreamAPI {
 
 
         Map<List<String>, DoubleSummaryStatistics> result = tripList.stream()
-                .collect(Collectors.groupingBy(//按照什么来分组,分组之后球什么
+                .collect(Collectors.groupingBy(// 按照什么来分组,分组之后球什么
                         trip -> Arrays.asList(trip.getBureauName(), trip.getYear(), String.valueOf(trip.getVolevel())),
                         Collectors.summarizingDouble(Trip::getLineLength)
                 ));
-        //Group: [1, 2022, 100] Count: 1 Sum: 2.0
-        //Group: [1, 2023, 100] Count: 2 Sum: 3.0
-        //Group: [1, 2022, 200] Count: 1 Sum: 2.0
+        // Group: [1, 2022, 100] Count: 1 Sum: 2.0
+        // Group: [1, 2023, 100] Count: 2 Sum: 3.0
+        // Group: [1, 2022, 200] Count: 1 Sum: 2.0
         result.forEach((group, stats) -> {
             System.out.println("Group: " + group + " Count: " + stats.getCount() + " Sum: " + stats.getSum());
         });

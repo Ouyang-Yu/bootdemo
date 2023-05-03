@@ -7,23 +7,27 @@ import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import javax.annotation.Resource;
 
 public class MQSend {
-//rocketmq.name-server=localhost:9876
+// rocketmq.name-server=localhost:9876
 
     @Resource
     private RocketMQTemplate rocketMQTemplate;
 
     public void send(String id) {
 //        rocketMQTemplate.convertAndSend("id",id);
-        rocketMQTemplate.asyncSend("topicName", id, new SendCallback() {
-            @Override
-            public void onSuccess(SendResult sendResult) {
-                System.out.println(sendResult.getSendStatus());
-            }
+        rocketMQTemplate.asyncSend(
+                "topicName",
+                id,
+                new SendCallback() {
+                    @Override
+                    public void onSuccess(SendResult sendResult) {
+                        System.out.println(sendResult.getSendStatus());
+                    }
 
-            @Override
-            public void onException(Throwable throwable) {
-                System.out.println(throwable.toString());
-            }
-        });
+                    @Override
+                    public void onException(Throwable throwable) {
+                        System.out.println(throwable.toString());
+                    }
+                }
+        );
     }
 }

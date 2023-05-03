@@ -14,6 +14,7 @@ public class Control {
                 .retrieve()
                 .bodyToMono(UserHandler.User.class)
                 .block();
+        assert u != null;
         System.out.println(u.getName());//lucy
 
         //查询所有
@@ -21,7 +22,8 @@ public class Control {
                 .uri("/users")
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
-                .bodyToFlux(UserHandler.User.class).map(stu -> stu.getName())
+                .bodyToFlux(UserHandler.User.class)
+                .map(UserHandler.User::getName)
                 .buffer()
                 .doOnNext(System.out::println)
                 .blockFirst();
