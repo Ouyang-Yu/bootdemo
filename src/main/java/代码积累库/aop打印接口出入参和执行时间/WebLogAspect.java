@@ -16,8 +16,9 @@ import javax.servlet.http.HttpServletRequest;
  * @time 2022-06-18 12:50
  *
  */
-@Aspect
+@Aspect ///!!!!!!!!
 @Component
+
 @Slf4j
 public class WebLogAspect {
     @Pointcut("@annotation(代码积累库.aop打印接口出入参和执行时间.WebLog)")
@@ -26,6 +27,8 @@ public class WebLogAspect {
     }
 
     @Before("method()")
+    //@Before("execution(* com.ouyang.boot.controller..*.*(..))")
+    // 主动aop controller递归目录下所有类,所有方法,所有参数
     public void doBefore(JoinPoint joinPoint) {
         log.info("========================================== Start ==========================================");
 

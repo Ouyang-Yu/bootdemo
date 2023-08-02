@@ -3,9 +3,11 @@ package 代码积累库;
 import cn.hutool.core.util.StrUtil;
 import com.google.common.base.Strings;
 import org.junit.jupiter.api.Test;
+import org.slf4j.helpers.MessageFormatter;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
+import java.io.UnsupportedEncodingException;
 import java.text.MessageFormat;
 import java.util.Map;
 import java.util.Optional;
@@ -14,6 +16,8 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 /**
  * @author ouyangyu369@gmail.com
  * @date 2022-06-28  12:28
@@ -21,10 +25,24 @@ import java.util.stream.Stream;
 
 public class String处理 {
     @Test
+    public void strEncode() throws UnsupportedEncodingException {
+//        0xEF 0xBF 0xBD
+        byte[] gbk = "大厦".getBytes("GBK");
+        String unicodeStr = new String(gbk, UTF_8);
+        System.out.println(unicodeStr);//����
+        // 用GBK编码的字符串,用unicode解码时候会无法识别,显示为��
+        String gbkStr = new String(unicodeStr.getBytes(UTF_8), "GBK");
+        System.out.println(gbkStr);// 锟斤拷锟斤拷
+        //��用unicode编码再用GBK解码会显示为锟斤拷
+
+
+    }
+
+    @Test
     public void dsd() {
 
-        "".lines();
-        "".stripLeading();
+        "".lines().forEach(System.out::println);
+        String s = "".stripLeading();
         System.out.println("Hello\\nWorld\\tJava".translateEscapes());
 
     }
@@ -54,10 +72,12 @@ public class String处理 {
 
     @Test
     public void format() {
+        MessageFormatter.format("{}", 1).getMessage();
         String format = MessageFormat.format("{0}123", 1);
-        String format1 = String.format("%s", 213);
-        String format2 = StrUtil.format("{}{}", 1,2);
+        String format1 = String.format("%s333", 213);
+        String 啊 = "%dAAA".formatted("啊");//
 
+        String format2 = StrUtil.format("{}{}", 1, 2);
     }
     /**
      * string format 用法
@@ -82,10 +102,7 @@ public class String处理 {
     @Test
     public void count() {
         Map<String, Long> map = Stream.of("abcc".split(""))
-                .collect(Collectors.groupingBy(
-                        String::toString,
-                        Collectors.counting()
-                ));
+                .collect(Collectors.groupingBy(String::toString, Collectors.counting()));
         map.forEach((k, v) -> System.out.println(k + "   :   " + v));
     }
 

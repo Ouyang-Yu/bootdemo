@@ -11,7 +11,7 @@ class MyResource {
     private volatile boolean FLAG = true;
 
     // 使用原子包装类，而不用number++
-    private AtomicInteger atomicInteger = new AtomicInteger();
+    private final AtomicInteger atomicInteger = new AtomicInteger();
 
     // 这里不能为了满足条件，而实例化一个具体的SynchronousBlockingQueue
     BlockingQueue<String> blockingQueue = null;
@@ -92,11 +92,11 @@ public class ProdConsumerBlockingQueueDemo {
 
         new Thread(() -> {
             System.out.println(Thread.currentThread().getName() + "\t 生产线程启动");
-            System.out.println("");
-            System.out.println("");
+            System.out.println();
+            System.out.println();
             try {
                 myResource.myProd();
-                System.out.println("");
+                System.out.println();
                 System.out.println("");
             } catch (Exception e) {
                 e.printStackTrace();

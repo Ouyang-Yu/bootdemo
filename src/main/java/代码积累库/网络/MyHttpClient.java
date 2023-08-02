@@ -12,7 +12,7 @@ import java.net.http.HttpResponse;
  * @author ouyangyu369@gmail.com
  * @date 2022-06-29  11:10
  */
-public class NET {
+public class MyHttpClient {
 
 
     @SneakyThrows

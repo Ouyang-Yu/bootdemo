@@ -32,8 +32,12 @@ public class MyOkhttp {
 
             }
         });
-        try (var response = okHttpClient.newCall(request).execute()) {
-            //execute方法，是一个同步请求方法，发起网络请求时会阻塞线程
+        try (
+                var response = okHttpClient.newCall(request).execute();
+                var body = response.body()
+        ) {
+
+            // execute方法，是一个同步请求方法，发起网络请求时会阻塞线程
             return response.body().string();
         }
 

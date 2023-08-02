@@ -1,4 +1,4 @@
-package 代码积累库.配置类;
+package 代码积累库.springmvc;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

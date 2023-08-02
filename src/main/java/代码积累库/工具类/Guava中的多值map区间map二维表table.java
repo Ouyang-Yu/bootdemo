@@ -3,6 +3,7 @@ package 代码积累库.工具类;
 import com.google.common.collect.*;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Set;
@@ -14,14 +15,25 @@ import java.util.Set;
  */
 public class Guava中的多值map区间map二维表table {
     @Test
+    public void dsdsd() {
+        String volevel = "+858";
+        System.out.println(Integer.parseInt(volevel));
+
+        System.out.println(volevel.substring((volevel.length() - 3)));
+        System.out.println(volevel.substring((0)));
+
+    }
+
+    @Test
     public void map() {
-        
-        new HashMap<Integer,Integer>(){{
+
+        new HashMap<Integer, Integer>() {{
             put(1, 1);
             put(1, 2);
-            //普通map的key是不能重复的,ketSet,这样只会覆盖,要想一个key对应多个value,只能value放list
-        }}.forEach((a,b)-> System.out.println(a+b));
+            // 普通map的key是不能重复的,ketSet,这样只会覆盖,要想一个key对应多个value,只能value放list
+        }}.forEach((a, b) -> System.out.println(a + b));
     }
+
     @Test
     public void multiMap() {
         Multimap<String, Integer> multimap = ArrayListMultimap.create();
@@ -35,6 +47,7 @@ public class Guava中的多值map区间map二维表table {
     }
 
     @Test
+    @SuppressWarnings("all")
     public void rangeMap() {
         RangeMap<Integer, String> rangeMap = TreeRangeMap.create();
         rangeMap.put(Range.closedOpen(0,60),"fail");
@@ -64,11 +77,36 @@ public class Guava中的多值map区间map二维表table {
                 .values().stream()
                 .reduce(Integer::sum)
                 .orElse(0);
-        //3.行和列的转置，直接调用Tables的静态方法transpose
+        // 3.行和列的转置，直接调用Tables的静态方法transpose
         Tables.transpose(table)
                 .cellSet()
                 .forEach(cell -> System.out.println(cell.getRowKey() + cell.getColumnKey() + cell.getValue()));
 
+    }
+
+
+    @Test
+    public void ds() {
+        ArrayList<String> strings = new ArrayList<>();
+        add(strings);// 改变了实参
+        strings.forEach(System.out::println);
+
+        int a = 1;
+        add(a);
+        System.out.println("dsd" + a);// 没有改变
+
+        Integer integer = 1;
+        add(integer);
+        System.out.println(integer);// 没有改变
+    }
+
+    private void add(Integer a) {
+        a = a + 1;
+        System.out.println(a);
+    }
+
+    private void add(ArrayList<String> strings) {
+        strings.add("11");
     }
 
 

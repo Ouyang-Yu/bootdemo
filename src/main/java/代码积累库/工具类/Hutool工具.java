@@ -32,7 +32,12 @@ public class Hutool工具 {
 
     @Test
     public void mail() {
-        MailUtil.send(new ArrayList<>() {{add("toEmail");}}, "测试", "邮件来自Hutool群发测试", false);
+        MailUtil.send(
+                new ArrayList<>() {{add("toEmail");}},
+                "测试",
+                "邮件来自Hutool群发测试",
+                false
+        );
         // 在 classpath（在标准 Maven 项目中为src/main/resources）的 config 目录下新建mail.setting文件，完整配置如下（邮件服务器必须支持并打开 SMTP 协议）：
         //
         //# 邮件服务器的SMTP地址，可选，默认为smtp.<发件人邮箱后缀>

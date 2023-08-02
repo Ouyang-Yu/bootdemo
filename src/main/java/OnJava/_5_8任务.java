@@ -1,13 +1,17 @@
 package OnJava;
 
+import kt.Person;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.IntFunction;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -43,21 +47,11 @@ public class _5_8任务 {
     public void test() {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         IntStream.range(0, 10)
-//                .mapToObj(new IntFunction<Runnable>() {
-//                    @Override
-//                    public Runnable apply(int value) {
-//                        return new Runnable() {  //不就是要返回一个runnable吗 给他就好了
-//                            @Override
-//                            public void run() {
-//                                
-//                            }
-//                        };
-//                    }
-//                })
+
                 .mapToObj(NapTask::new)
                 .forEach(executor::execute);
         System.out.println("主线程所有任务已提交");
-        executor.shutdown();//main告诉线程池不再接受新的任务,做完已有的就停止,线程池没有结束之后,main才结束
+        executor.shutdown();// main告诉线程池不再接受新的任务,做完已有的就停止,线程池没有结束之后,main才结束
         while (!executor.isTerminated()) {
             System.out.println(Thread.currentThread().getName() + "正在运行");
             Thread.sleep(1000);
@@ -70,12 +64,12 @@ public class _5_8任务 {
     @Test
     public void test1() {
         ExecutorService executor = Executors.newCachedThreadPool();
-        //通过结构一致性支持lambda和方法引用
-        Future<?> future = executor.submit(() -> System.out.println(1));//在传入runnable时候和execute()一样
+        // 通过结构一致性支持lambda和方法引用
+        Future<?> future = executor.submit(() -> System.out.println(1));// 在传入runnable时候和execute()一样
         Future<Integer> submit = executor.submit(() -> {
             System.out.println("");
             return 1;
-        });  //所有的submit都会返回一个future00
+        });  // 所有的submit都会返回一个future00
 
     }
 
@@ -114,7 +108,7 @@ public class _5_8任务 {
     public void test3() {
         List<Runnable> tasks = IntStream.range(0, 10)
                 .mapToObj(getMapper(running))
-                .collect(Collectors.toList());
+                .toList();
         tasks.forEach(it -> running.set(false));
         tasks.stream()
                 .map(CompletableFuture::runAsync)
@@ -134,7 +128,9 @@ public class _5_8任务 {
             ;
 
             State step() {
-                if (equals(THREE)) return THREE;
+                if (equals(THREE)) {
+                    return THREE;
+                }
                 return values()[ordinal() + 1];
             }
         }
@@ -217,7 +213,7 @@ public class _5_8任务 {
 
         Integer x = CompletableFuture.completedFuture(6)
                 .thenComposeAsync(integer -> CompletableFuture.completedFuture(integer + 99))
-                .get();   //compose 和apply类似 也是接受一个function ,但compose返回值必须是future
+                .get();   // compose 和apply类似 也是接受一个function ,但compose返回值必须是future
         System.out.println(
                 x
         );
@@ -231,5 +227,84 @@ public class _5_8任务 {
         );
 
     }
+
+
+    @Test
+    public void d() {
+        ArrayList<LineCoverSqlDTO> lineCoverSqlDTOS = new ArrayList<LineCoverSqlDTO>() {{
+            add(new LineCoverSqlDTO("2", "1", 2.0));
+            add(new LineCoverSqlDTO("1", "0", 1.0));
+            add(new LineCoverSqlDTO("3", "2", 3.0));
+            add(new LineCoverSqlDTO("4", "1", 4.0));
+        }};
+
+        for (LineCoverSqlDTO sqlDTO : lineCoverSqlDTOS) {
+            sqlDTO.setAllSubTotalLength(getAllSubTotalLength(sqlDTO, lineCoverSqlDTOS));
+        }
+        lineCoverSqlDTOS.forEach(System.out::println);
+
+    }
+
+    private Double getAllSubTotalLength(LineCoverSqlDTO sqlDTO, List<LineCoverSqlDTO> list) {
+        return sqlDTO.getTotalLength() +
+                list.stream()
+                        .filter(record -> record.getParentBureauId().equals(sqlDTO.getBureauId()))
+                        .map(record -> getAllSubTotalLength(record, list))
+                        .reduce((double) 0, Double::sum);
+    }
+
+    @Test
+    public void d多少的() {
+        String str = "Hello, World!";
+        Pattern pattern = Pattern.compile("[a-zA-Z]");
+        Matcher matcher = pattern.matcher(str);
+        if (matcher.find()) {
+            int position = matcher.start();
+            System.out.println("The first letter is at position " + position);
+        } else {
+            System.out.println("No letter found in the string");
+        }
+        System.out.println(pattern.matcher("湖北").start());
+    }
+
+    @Test
+    public void dsd() {
+        AtomicInteger atomicInteger = new AtomicInteger(1);
+        int next = atomicInteger.getAndAccumulate(1, Integer::sum);
+        System.out.println("next = " + next);
+        System.out.println("atomicInteger = " + atomicInteger);
+    }
+
+    @Test
+    public void sort() {
+
+        List<Person> people = Arrays.asList(
+                new Person("Alice", 20),
+                new Person("Bob", 25),
+                new Person("Charlie", 18),
+                new Person("David", 30),
+                new Person("Evelyn", 22),
+                new Person("Frankie", 28),
+                new Person("Grace", 24),
+                new Person("Henry", 21)
+        );
+
+        Map<String, List<Person>> groupedByName = people.stream()
+                .collect(
+                        Collectors.groupingBy(
+                                Person::getName,
+                                Collectors.collectingAndThen(
+                                        Collectors.toList(),
+                                        list -> {
+                                            list.sort(Comparator.comparing(Person::getAge));
+                                            return list;
+                                        }
+                                )
+                        )
+                );
+
+        System.out.println(groupedByName);
+    }
+
 }
 

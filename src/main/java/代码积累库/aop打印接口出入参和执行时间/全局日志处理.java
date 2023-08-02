@@ -11,6 +11,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.core.env.Profiles;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.util.Arrays;
 
 @Aspect
@@ -18,7 +19,7 @@ import java.util.Arrays;
 @Slf4j
 public class 全局日志处理 {
 
-
+    @Resource
     private final Environment env;
 
     public 全局日志处理(Environment env) {
@@ -33,6 +34,7 @@ public class 全局日志处理 {
             " || within(@org.springframework.web.bind.annotation.RestController *)")
     public void springBeanPointcut() {
         // 方法为空，因为这只是一个切入点，实现在通知中。
+
     }
 
     /**
@@ -58,7 +60,7 @@ public class 全局日志处理 {
 
         // 判断环境，dev、test or prod
         if (env.acceptsProfiles(Profiles.of("dev", "test"))) {
-            log.error("Exception in {}.{}() with cause = '{}' and exception = '{}'",
+            log.error("Exception in {}  .{}() with cause = '{}' and exception = '{}'",
                     joinPoint.getSignature().getDeclaringTypeName(),
                     joinPoint.getSignature().getName(),
                     e.getCause() != null ? e.getCause() : "NULL", e.getMessage(),

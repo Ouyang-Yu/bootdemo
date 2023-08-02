@@ -1,7 +1,6 @@
-package 代码积累库;
+package 代码积累库.并发多线程;
 
 import org.apache.tomcat.util.threads.ThreadPoolExecutor;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -26,14 +25,15 @@ public class 线程池 {
          */
 
         AtomicInteger atomicInteger = new AtomicInteger(1);
-        ThreadPoolExecutor threadPool = new ThreadPoolExecutor(Runtime.getRuntime().availableProcessors() + 1, 3, 0, TimeUnit.MILLISECONDS, //救急队列的生存时间
-                new ArrayBlockingQueue<>(2),  //阻塞队列
-                new ThreadFactory() {  //线程工厂.方便创建线程起个好名字
-                    @Override
-                    public Thread newThread(@NotNull Runnable r) {
-                        return new Thread(r, "myThread" + atomicInteger.getAndIncrement());
-                    }
-                }, new ThreadPoolExecutor.AbortPolicy() //拒绝策略,默认终止并异常,还可以直接丢弃,丢弃最旧,抛给调用者线程
+        // 线程工厂.方便创建线程起个好名字
+        ThreadPoolExecutor threadPool = new ThreadPoolExecutor(
+                Runtime.getRuntime().availableProcessors() + 1,
+                3,
+                0,
+                TimeUnit.MILLISECONDS, // 救急队列的生存时间
+                new ArrayBlockingQueue<>(2),  // 阻塞队列
+                r -> new Thread(r, "myThread" + atomicInteger.getAndIncrement()),
+                new ThreadPoolExecutor.AbortPolicy() // 拒绝策略,默认终止并异常,还可以直接丢弃,丢弃最旧,抛给调用者线程
         );
 
 
@@ -41,12 +41,7 @@ public class 线程池 {
          * Callable 用于产生结果，Future 用于获取结果
          * futureTask自己就能获取结果,不用由线程池返回一个future再get
          */
-        Future<String> future = threadPool.submit(new Callable<String>() {
-            @Override
-            public String call() throws Exception {
-                return "haha";
-            }
-        });
+        Future<String> future = threadPool.submit(() -> "haha");
         String s = future.get();
 
 
@@ -69,7 +64,7 @@ public class 线程池 {
          *
          *
          *
-         *2.    四种获取结果的方式
+         *2. 四种获取结果的方式
          * public T get()
          * public T get(long timeout, TimeUnit unit)
          * public T getNow(T valueIfAbsent)

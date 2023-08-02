@@ -1,4 +1,4 @@
-package 代码积累库.配置类;
+package 代码积累库.springmvc;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;

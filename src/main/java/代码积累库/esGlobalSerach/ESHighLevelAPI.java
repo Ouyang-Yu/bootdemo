@@ -1,4 +1,4 @@
-package 代码积累库;
+package 代码积累库.esGlobalSerach;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
@@ -30,7 +30,7 @@ import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class ES搜索 {
+public class ESHighLevelAPI {
 
     @Resource
     private RestHighLevelClient client;
@@ -46,7 +46,7 @@ public class ES搜索 {
     @Test
     public void createIndex() throws IOException {
         client.indices().create(new CreateIndexRequest("books"), RequestOptions.DEFAULT);
-        //通过json定义一类文档的数据结构,即索引
+        // 通过json定义一类文档的数据结构,即索引
         boolean books = client.indices()
                 .exists(new GetIndexRequest("books"), RequestOptions.DEFAULT);
 
@@ -65,25 +65,26 @@ public class ES搜索 {
         GetRequest getRequest = new GetRequest();
         UpdateRequest updateRequest = new UpdateRequest();
         DeleteRequest deleteRequest = new DeleteRequest();
-        client.index(request, RequestOptions.DEFAULT);//添加文档,即要查询的数据
+        client.index(request, RequestOptions.DEFAULT);// 添加文档,即要查询的数据
 
 
     }
 
-    @Test
-    public void teee() {
-
-    }
 
     @Test
     public void bulk() throws IOException {
         ArrayList<Bean> beans = new ArrayList<>();
-        client.bulk(new BulkRequest() {{
-            beans.forEach(bean -> {
-                IndexRequest request = new IndexRequest("books").source(JSONUtil.toJsonStr(bean), XContentType.JSON);
-                add(request);
-            });
-        }}, RequestOptions.DEFAULT);//也可以把多个数据添加到bulk一起提交
+        client.bulk(
+
+                new BulkRequest() {{
+                    beans.forEach(bean -> {
+                        IndexRequest request = new IndexRequest("books").source(JSONUtil.toJsonStr(bean), XContentType.JSON);
+                        add(request);
+                    });
+                }}
+
+                , RequestOptions.DEFAULT
+        );// 也可以把多个数据添加到bulk一起提交
     }
 
     @Test
@@ -95,7 +96,8 @@ public class ES搜索 {
                         .size(5)
                 );
         client.search(request, RequestOptions.DEFAULT)
-                .getHits().forEach(ES搜索::hitSourceToBean);//搜索出的结果转成实体类
+                .getHits()
+                .forEach(ESHighLevelAPI::hitSourceToBean);// 搜索出的结果转成实体类
     }
 
     @Configuration
@@ -109,6 +111,12 @@ public class ES搜索 {
             }
 
         }
+    }
+
+    @Test
+    public void dsf() {
+
+
     }
 }
 

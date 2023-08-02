@@ -1,4 +1,4 @@
-package 代码积累库.配置类;
+package 代码积累库.springmvc;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -8,12 +8,13 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.DateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.convert.converter.Converter;
+import org.springframework.format.Formatter;
+import org.springframework.format.FormatterRegistry;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 
@@ -23,17 +24,17 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.TimeZone;
+
 @Component
 @Configuration
-
+@SuppressWarnings("NullableProblems")
 public class WebMvcConfig extends WebMvcConfigurationSupport {
-
-    @Bean
-    public Converter<String, LocalDateTime> localDateTimeConvert() {
-        return source -> LocalDateTime.parse(source, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-    }//日期str解析
-
+    @Override
+    protected void addInterceptors(InterceptorRegistry registry) {
+        super.addInterceptors(registry);
+    }
 
     @Override
     protected void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
@@ -63,5 +64,26 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
         registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
     }
 
+    /**
+     * 全局的@DateTimeFormat,解析str入参为LocalDateTime
+     *
+     * @param registry
+     */
+    @Override
+    protected void addFormatters(FormatterRegistry registry) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        registry.addFormatter(new Formatter<LocalDateTime>() {
+            @Override
+            public LocalDateTime parse(String text, Locale locale) {
+                return LocalDateTime.parse(text, formatter);
+            }
+
+
+            @Override
+            public String print(LocalDateTime object, Locale locale) {
+                return formatter.format(object);
+            }
+        });
+    }
 
 }

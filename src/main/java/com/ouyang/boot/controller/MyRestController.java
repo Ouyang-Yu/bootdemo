@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 2022-02-11 20:54
@@ -51,17 +50,18 @@ public class MyRestController {
     }
 
     @GetMapping("/acc/page={page}&size={size}")
-    public Page<Account> acc(@PathVariable Integer page,@PathVariable Integer size) {
-        return accountRepository.findAll(PageRequest.of(page-1,size));
+    public Page<Account> acc(@PathVariable Integer page, @PathVariable Integer size) {
+        return accountRepository.findAll(PageRequest.of(page - 1, size));
     }
+
     @GetMapping("acc")
     public List<Account> accounts() {
         return accountRepository.findAll();
     }
 
-    @RequestMapping("/add/id={id}&name={name}")
-    public String addAccount(@PathVariable Integer id, @PathVariable String name) {
-        Account save = accountRepository.save(new Account(id, name));
-        return "Success saved " + save.getName();
-    }
+    // @RequestMapping("/add/id={id}&name={name}")
+    // public String addAccount(@PathVariable Integer id, @PathVariable String name) {
+    //     Account save = accountRepository.save(new Account(id, name));
+    //     return "Success saved " + save.getName();
+    // }
 }

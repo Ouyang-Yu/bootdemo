@@ -1,8 +1,7 @@
 package 代码积累库.aop打印接口出入参和执行时间;
 
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;  //if arg is null,ide will prompt
+import org.jetbrains.annotations.NotNull;
 import org.springframework.lang.NonNull;
 
 /**
@@ -11,22 +10,17 @@ import org.springframework.lang.NonNull;
  */
 @Slf4j
 public class Ttt {
-    @CountTime
     public static void main(String[] args)  {
 
-
-        te(null);  //jetbrains的   IDE有提示且运行会报错
-        aa(null);  //Spring的     IDE有提示但是可以运行
-        bb(null);  //lombok 自动加的try catch
+        aa(null);  // Spring的     IDE有提示但是可以运行
+        NotNullByJetBrain(null);  // jetbrains的   IDE有提示且运行会报错
+        bb(null);  // lombok 自动加的try catch
 
     }
 
-    @CountTime
-    @SneakyThrows
-    static void te(@NotNull String string) {// jetBrain offer
+    static void NotNullByJetBrain(@NotNull String string) {// jetBrain offer
         // if use a null arg is null,ide will prompt
         System.out.println(string);
-        Thread.sleep(0x7d0);
     }
 
     static void aa(@NonNull String s) {  //spring offer
