@@ -1,6 +1,7 @@
 package 代码积累库.springmvc;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -71,6 +72,8 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
      */
     @Override
     protected void addFormatters(FormatterRegistry registry) {
+
+
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         registry.addFormatter(new Formatter<LocalDateTime>() {
             @Override

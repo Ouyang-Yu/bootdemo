@@ -1,12 +1,9 @@
-package 代码积累库.工具类;
+package 代码积累库.工具库的使用;
 
 import com.google.common.collect.*;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 多值map
@@ -14,15 +11,7 @@ import java.util.Set;
  * 二维表table
  */
 public class Guava中的多值map区间map二维表table {
-    @Test
-    public void dsdsd() {
-        String volevel = "+858";
-        System.out.println(Integer.parseInt(volevel));
 
-        System.out.println(volevel.substring((volevel.length() - 3)));
-        System.out.println(volevel.substring((0)));
-
-    }
 
     @Test
     public void map() {
@@ -41,6 +30,8 @@ public class Guava中的多值map区间map二维表table {
         multimap.put("day",2);
         multimap.put("day",8);
         multimap.put("month",3);
+        List<Integer> d = multimap.get("d").stream().toList();
+
         multimap.forEach((a,b)-> System.out.println(a+b));
         System.out.println(multimap);//{day=[1, 2, 8]}
 //每个key对应的都是一个集合

@@ -76,7 +76,7 @@ fun main() {
         2 to "b"
     )
     for ((index, str) in mapOf) { //解构
-        println("$index -> $str")
+        println(" ${index.dec()} -> $str")
     }
 
     //空指针
@@ -186,7 +186,7 @@ class MyTest {
 
     @Test
     fun jFrame() {
-        JFrame("BoyNextDoor2").run {
+         JFrame("BoyNextDoor2").run {
             layout = BorderLayout()
             //run 内 精简的setA(BB) 赋值,有点像命名参数,不过本来这些属性就是JFrame的参数
             //可能区别就在于{}里是赋值   ()里是命名参数
@@ -200,7 +200,7 @@ class MyTest {
                         graphics?.drawImage(
                             ImageIO.read(URL("https://t7.baidu.com/it/u=1595072465,3644073269&fm=193&f=GIF"))
                                 .apply {
-                                    this@run.setSize(width, height) //这里的this默认是小范围的image对象,@run函数指明是run里面的this
+                                    this@run.setSize(this.width, height) //这里的this默认是小范围的image对象,@run函数指明是run里面的this
                                 },
                             //在这里只要一个image对象就可以
                             // 但是可以通过apply使用image对象的属性

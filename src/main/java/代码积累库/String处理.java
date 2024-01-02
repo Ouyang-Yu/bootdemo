@@ -25,6 +25,20 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class String处理 {
     @Test
+    public void patten() {
+        String str = "Hello, World!";
+        Pattern pattern = Pattern.compile("[a-zA-Z]");
+        if (pattern.matcher(str).find()) {
+            int position = pattern.matcher(str).start();
+            System.out.println("The first letter is at position " + position);
+        } else {
+            System.out.println("No letter found in the string");
+        }
+        System.out.println(pattern.matcher("湖北").start());
+    }
+
+
+    @Test
     public void strEncode() throws UnsupportedEncodingException {
 //        0xEF 0xBF 0xBD
         byte[] gbk = "大厦".getBytes("GBK");

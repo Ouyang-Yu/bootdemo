@@ -1,4 +1,4 @@
-package 代码积累库.并发多线程;
+package 代码积累库.多线程与异步任务;
 
 /**
  * @author OuYang  <a href="mailto:2455356027@qq.com">Mail</a>

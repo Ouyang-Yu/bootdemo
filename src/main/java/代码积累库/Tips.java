@@ -1,15 +1,14 @@
 package 代码积累库;
 
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
-import java.util.BitSet;
-import java.util.HexFormat;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.LongAccumulator;
+import java.util.stream.Collectors;
 
 /**
  * @author ouyangyu369@gmail.com
@@ -17,7 +16,34 @@ import java.util.concurrent.atomic.LongAccumulator;
  */
 
 @Slf4j
+@Data
 public class Tips {
+    @Test
+    public void asd() {
+        new HashMap<String,String>(){{
+            put("1", "1");
+            put(null, "1");
+        }}.forEach((key,value)-> System.out.println(key+" = "+value));
+
+        String s = "aAbbccc"; //
+        s = s.toLowerCase();
+        Arrays.stream(s.split(""))
+                .collect(Collectors.groupingBy(
+                        ss -> ss,// 通过自身分组,也就是map的key
+                        Collectors.counting()// 分组之后    做什么返回什么?每组个数!就是value
+                ))
+                .forEach((key, value) -> System.out.println(key + " " + value));
+
+        Arrays.stream(s.split(""))
+                .collect(Collectors.groupingBy(a -> a))// group一个参数,仅仅按key分组,value就是每组
+                .forEach((key, value) -> System.out.println(key + " " + value));
+        Arrays.stream(s.split(""))
+                .collect(Collectors.toMap(
+                        a->a,
+                        String::length,
+                        Integer::sum
+                )).forEach((key,value)-> System.out.println(key+" = "+value));
+    }
 
     @Test
     public void d() {
@@ -88,6 +114,7 @@ public class Tips {
                         TimeUnit.MILLISECONDS
                 );
             }
+
         }
         DelayQueue<DelayEvent> delayQueue = new DelayQueue<>();
         delayQueue.offer(new DelayEvent(System.currentTimeMillis() + 2000, "1"));
@@ -115,6 +142,10 @@ public class Tips {
             System.out.println(accumulator.get());
         }
         assert accumulator.get() == 60;
+    }
+    @Test
+    public void das() {
+
     }
 
     @Test

@@ -1,6 +1,6 @@
 package 代码积累库.网络;
 
-import lombok.val;
+ import lombok.val;
 import okhttp3.*;
 import org.junit.jupiter.api.Test;
 
@@ -23,24 +23,30 @@ public class okhhtp批量下载图片 {
             } else {
                 name = "" + i;
             }
-            download("https://img.itmtu.com/mm/s/slct/alpha/alpha.008/0" + name + ".jpg", "C:\\4\\", name, new OnDownloadListener() {
-                @Override
-                public void onDownloadSuccess(File file) {
-                    System.out.println("success");
-                }
+            this.download(
+                    "https://img.itmtu.com/mm/s/slct/alpha/alpha.008/0" + name + ".jpg",
+                    "C:\\4\\",
+                    name,
+                    new OnDownloadListener() {
+                        @Override
+                        public void onDownloadSuccess(File file) {
+                            System.out.println("success");
+                        }
 
-                @Override
-                public void onDownloading(int progress) {
-                    System.out.println(progress + "");
-                }
+                        @Override
+                        public void onDownloading(int progress) {
+                            System.out.println(progress + "");
+                        }
 
-                @Override
-                public void onDownloadFailed(Exception e) {
-                    System.err.println(e.getMessage());
-                }
-            });
+                        @Override
+                        public void onDownloadFailed(Exception e) {
+                            System.err.println(e.getMessage());
+                        }
+                    }
+            );
         }
     }
+    // 80%换新服务是指
 
     interface OnDownloadListener {
         /**

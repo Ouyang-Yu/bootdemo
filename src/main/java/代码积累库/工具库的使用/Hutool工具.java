@@ -1,4 +1,4 @@
-package 代码积累库.工具类;
+package 代码积累库.工具库的使用;
 
 import cn.hutool.cache.Cache;
 import cn.hutool.cache.CacheUtil;
@@ -10,14 +10,29 @@ import cn.hutool.core.util.IdUtil;
 import cn.hutool.crypto.digest.DigestUtil;
 import cn.hutool.extra.mail.MailAccount;
 import cn.hutool.extra.mail.MailUtil;
+import cn.hutool.extra.pinyin.engine.pinyin4j.Pinyin4jEngine;
 import cn.hutool.http.HttpUtil;
+import net.sourceforge.pinyin4j.PinyinHelper;
 import org.junit.jupiter.api.Test;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.UUID;
 
 public class Hutool工具 {
 
+
+    @Test
+    public void pinyin() {
+        String lv = new Pinyin4jEngine().getPinyin('吕');//hutool
+        String[] lvs = PinyinHelper.toHanyuPinyinStringArray('吕');//pinyin4j
+        String[] lvss = PinyinHelper.toHanyuPinyinStringArray('欧');//pinyin4j
+        System.out.println("lv = " + lv);
+        System.out.println(Arrays.toString(lvs));
+        System.out.println("lvss = " + Arrays.stream(lvss).toList());
+
+    }
 
     @Test
     public void digest() {
@@ -61,12 +76,30 @@ public class Hutool工具 {
 
     @Test
     public void id() {
-        IdUtil.fastUUID(); IdUtil.fastSimpleUUID();
+        //fast 比random 快
+        //simple没有横杠
+        System.out.println(cn.hutool.core.lang.UUID.randomUUID());
+        System.out.println(IdUtil.randomUUID());
+        System.out.println(IdUtil.simpleUUID());
+        System.out.println(IdUtil.fastUUID());
+        System.out.println(IdUtil.fastSimpleUUID());
+        System.out.println(IdUtil.getSnowflakeNextId());
+
+        System.out.println(UUID.randomUUID());
+        //b6af54b7-7c48-4ad1-bbf9-9811e9045f78
+        // d5c39b70-0f5e-4b42-a026-af422d4fe7db
+        // 0a82c6bf49dd4783b94309601e496b9f
+        // 8df6ac5f-f2d3-4555-9a49-10a9eaa2b638
+        // 1c541ed4965c422e949912e010adc386
+        // cn.hutool.core.lang.Snowflake@1757cd72
+        // fbb7a7f4-511a-4949-9842-80740617da3b
+
     }
 
     @Test
     public void net() {
-        String urlString = "https://www.baidu.com"; String result1 = HttpUtil.get(urlString, StandardCharsets.UTF_8);
+        String urlString = "https://www.baidu.com";
+        String result1 = HttpUtil.get(urlString, StandardCharsets.UTF_8);
         HttpUtil.post(urlString, "请求参数的map或者请求体");
         // paramMap.put("file", FileUtil.file("D:\\face.jpg")); //uploadFile
 

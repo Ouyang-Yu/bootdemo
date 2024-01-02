@@ -75,7 +75,7 @@ public class 并发包下的Flow {
 
 
         // 5. 结束后 关闭发布者
-        // 正式环境 应该放 finally 或者使用 try-resouce 确保关闭
+        // 正式环境 应该放 finally 或者使用 try-resource 确保关闭
         publisher.close();
 
         // 主线程延迟停止, 否则数据没有消费就退出

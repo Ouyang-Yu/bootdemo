@@ -49,7 +49,7 @@ public class 函数式编程 {
             public final Camera apply(Function<Color, Color>... functions) {
                 Color apply = Arrays.stream(functions)
                         .reduce(Function::compose)
-                        .orElseGet(() -> color -> color)//如果没有函数可以apply那就apply一个废话函数
+                        .orElseGet(() -> color -> color)//如果传null 那就返回一个变成自己的函数
                         .apply(this.color);
                 return new Camera(apply);//不改变原来元素
             }
@@ -75,6 +75,7 @@ public class 函数式编程 {
                 (integer, transform) -> transform.apply(integer);
 
         String apply = biFunction.apply(new Object(), fun);
+        String apply1 = fun.apply(new Object());
         System.out.println(apply);
 
 
@@ -106,14 +107,15 @@ public class 函数式编程 {
         }
     }
 
+
     @Test
     public void f() {
 
         BiConsumer<Consumer<Object>, Object> executeIfParamNotNull = this::executeIfParamNotNull;
-        //方法作为类的实例
+        // 方法作为类的实例
         executeIfParamNotNull(System.out::println, new Random().nextBoolean() ? 1 : null);
         executeIfParamNotNull.accept(System.out::println, new Random().nextBoolean() ? 1 : null);
-        //用高阶函数代替下面函数,优点是不同起临时变量,更优雅更装逼,用kt可以给话甚至可以给consumer起一个拓展函数
+        // 用高阶函数代替下面函数,优点是不同起临时变量,更优雅更装逼,用kt可以给话甚至可以给consumer起一个拓展函数
         Integer integer = new Random().nextBoolean() ? 1 : null;
         if (integer != null) {
             System.out.println(integer);

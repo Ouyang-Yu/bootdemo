@@ -29,15 +29,17 @@ open class RestConfigKt {
 
     @Bean
     open fun restTemplate(clientHttpRequestFactory: ClientHttpRequestFactory): RestTemplate {
-        return RestTemplate(clientHttpRequestFactory).apply {
-            val interceptor = ClientHttpRequestInterceptor { request, body, execution ->
-                execution.execute(
-                    request.apply { this.headers.add(HttpHeaders.USER_AGENT, "") },
-                    body
-                )
-            }//kt中的匿名接口实现类,省略了括号,三个参数写在大括号之后,->下面是方法体
-            this.interceptors = listOf(interceptor)
-        }
+        return RestTemplate(clientHttpRequestFactory)
+            .apply {
+                val interceptor = ClientHttpRequestInterceptor { request, body, execution ->
+                    execution.execute(
+                        request.apply { this.headers.add(HttpHeaders.USER_AGENT, "") },
+                        body
+                    )
+                }
+                this.interceptors = listOf(interceptor)
+                interceptors= listOf(interceptor)
+            }
     }
 
 

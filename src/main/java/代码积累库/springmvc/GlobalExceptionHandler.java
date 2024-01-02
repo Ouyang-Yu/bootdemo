@@ -6,6 +6,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import javax.validation.ConstraintViolationException;
 import java.util.List;
 
 @RestControllerAdvice
@@ -20,13 +21,19 @@ public class GlobalExceptionHandler {
      * @param exception
      * @return
      */
-    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ExceptionHandler//requestBody参数异常
     public ResponseEntity<String> arg(MethodArgumentNotValidException exception) {
         List<String> message = exception.getBindingResult()
                 .getFieldErrors()
                 .stream()
-                .map(FieldError::getDefaultMessage)
+                .map(FieldError::getDefaultMessage)//哪些字段错误了的信息
                 .toList();
-        return ResponseEntity.ok(String.join(",", message));
+         return ResponseEntity.ok(String.join(",", message));
+    }
+
+    @ExceptionHandler//param
+    public ResponseEntity<String> param(ConstraintViolationException exception) {
+        exception.getConstraintViolations().stream();
+        return ResponseEntity.ok("");
     }
 }

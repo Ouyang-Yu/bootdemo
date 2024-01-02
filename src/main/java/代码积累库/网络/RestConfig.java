@@ -26,6 +26,7 @@ public class RestConfig {
     @Bean
     public RestTemplate restTemplate(ClientHttpRequestFactory factory) {
         RestTemplate restTemplate = new RestTemplate(factory);
+        RestTemplate okTemplate = new RestTemplate(new OkHttp3ClientHttpRequestFactory());
         restTemplate.setInterceptors(Collections.singletonList(new ClientHttpRequestInterceptor() {
             @Override
             public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution) throws IOException {

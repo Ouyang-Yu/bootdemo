@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test
  */
 
 
-class 函数 {
+class KTFun {
     @Test
     fun d() {
         fun a(s: Int, b: (Int) -> String): String {
@@ -18,7 +18,7 @@ class 函数 {
 
         val aa = ::a
 
-        val function: (Int) -> String = { it -> it.toString() } //将函数类型的变量定义为lambda,最后一行自动返回
+        val function: (Int) -> String = { it.toString() } //将函数类型的变量定义为lambda,最后一行自动返回
         println(aa(2, function))
         fun aaa(a: Int): String {
             return a.toString()   //这是定义函数体 ,所以要写return

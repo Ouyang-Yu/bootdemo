@@ -1,5 +1,6 @@
 package 代码积累库;
 
+import kt.Person;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,7 +25,58 @@ import java.util.stream.Stream;
 
 
 public class StreamAPI {
-    //
+    @Test
+    public void ds() {
+        Double avg = Stream.of(null, 3.0).collect(Collectors.averagingDouble(value -> Optional.ofNullable(value).orElse(0.0)));
+        DoubleSummaryStatistics statistics = Stream.of(1.0, 3.0).collect(Collectors.summarizingDouble(Double::doubleValue));
+        System.out.println(statistics);
+        //DoubleSummaryStatistics{count=2, sum=4.000000, min=1.000000, average=2.000000, max=3.000000}
+        long a=1;
+        Long aa= 1L;
+    }
+
+
+    @Test
+    public void toMap() {
+        Map<Boolean, Integer> collect = new ArrayList<String>().stream().collect(
+                Collectors.toMap(
+                        String::isEmpty,//key
+                        String::length,//value
+                        Integer::sum// if the same key, value will sum
+                ));
+        Map<Boolean, Integer> map = new ArrayList<String>().stream().collect(
+                Collectors.groupingBy(
+                        String::isEmpty,
+                        Collectors.collectingAndThen(Collectors.toList(), strings -> strings.stream().map(String::length).reduce(0, Integer::sum))
+                )
+
+        );
+    }
+
+
+    @Test
+    public void gruopAndSort() {
+
+        List<Person> people = Arrays.asList(
+                new Person("Alice", 20),
+                new Person("Bob", 25)
+
+        );
+
+        // 按名字分组,每一组内的列表再按照年龄排序
+        Map<String, List<Person>> groupedByName = people.stream()
+                .collect(Collectors.groupingBy(
+                        Person::getName,
+                        Collectors.collectingAndThen(Collectors.toList(), this::sortByAge)
+                ));
+
+        System.out.println(groupedByName);
+    }
+
+    private <RR, R> List<Person> sortByAge(List<Person> list) {
+        list.sort(Comparator.comparing(Person::getAge));
+        return list;
+    }
     @Test
     public void range() {
 
@@ -63,7 +115,7 @@ public class StreamAPI {
                 .distinct()
                 .mapToObj(it -> String.valueOf(((char) it)))
                 .sorted()
-                .collect(Collectors.joining(","));
+                .collect(Collectors.joining( ));
         System.out.println(collect);
         boolean x = Stream.of("11", "21").anyMatch("211"::contains);
         System.out.println(x);
@@ -101,7 +153,7 @@ public class StreamAPI {
                 .mapToInt(User::getId)
                 .sum();//.mapToInt(User::getId).sum();
 
-        users.stream() // max
+        代码积累库.StreamAPI.User user = users.stream() // max
                 .filter(it -> it.isVIP)
                 .max(Comparator.comparingInt(User::getId))
                 .orElseThrow();
@@ -170,7 +222,8 @@ public class StreamAPI {
                 .sorted(Comparator.comparing(User::getName))
                 .map(User::getName)
                 .toList();
-        users.stream().collect(Collectors.partitioningBy(User::getIsVIP));
+        Map<Boolean, List<User>> collect2 = users.stream().collect(Collectors.partitioningBy(User::getIsVIP));
+
         // 根据是不是vip划分two part,只能接受predicate
 
         Map<Integer, List<User>> collect1 = users.stream().collect(Collectors.groupingBy(User::getId));
@@ -204,7 +257,8 @@ public class StreamAPI {
         // Group: [1, 2023, 100] Count: 2 Sum: 3.0
         // Group: [1, 2022, 200] Count: 1 Sum: 2.0
         result.forEach((group, stats) -> {
-            System.out.println("Group: " + group + " Count: " + stats.getCount() + " Sum: " + stats.getSum());
+            // System.out.println("Group: " + group + " Count: " + stats.getCount() + " Sum: " + stats.getSum());
+            System.out.println(group+stats.toString());
         });
 
 

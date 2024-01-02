@@ -22,5 +22,19 @@ public class 反射 {
 
     }
 
+    @Test
+    public void 获取当前类名和方法名() {
+        System.out.println(this.getClass().getName());
+        System.out.println(Thread.currentThread().getStackTrace()[1].getMethodName());
+        System.out.println(new Exception().getStackTrace()[0].getMethodName());
+        System.out.println(Object.class.getEnclosingMethod().getName());
+
+    }
+
+    @Test
+    public void sd() {
+        System.out.println(Arrays.toString(this.getClass().getMethods()));
+    }
+
 
 }

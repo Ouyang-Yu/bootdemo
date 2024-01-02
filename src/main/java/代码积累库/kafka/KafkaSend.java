@@ -16,6 +16,10 @@ public class KafkaSend {
     public void send(String id) {
         kafkaTemplate.send("topic", id);
         System.out.println("send");
+
     }
+
+
+
 
 }

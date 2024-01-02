@@ -1,5 +1,6 @@
 package 代码积累库.响应式编程;
 
+import co.elastic.clients.elasticsearch._types.TimeUnit;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.reactivestreams.Subscriber;
@@ -9,15 +10,20 @@ import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
 import java.time.Duration;
+import java.time.chrono.ChronoLocalDateTime;
+import java.time.chrono.ChronoPeriod;
+import java.time.chrono.Chronology;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class FluxAndMono {
 
     @Test
     public void flux() {
+
         Flux.fromArray(new Integer[]{1, 2, 3}).subscribe(System.out::println);
         Flux.empty().subscribe(System.out::println);
         Flux.range(1, 10).subscribe(System.out::println);
@@ -58,22 +64,27 @@ public class FluxAndMono {
 
     @Test
     public void mono() {
+
         Mono.fromSupplier(() -> "Mono1").subscribe(System.out::println);
         Mono.justOrEmpty(Optional.of("Mono2")).subscribe(System.out::println);
         Mono.create(monoSink -> monoSink.success("Mono3")).subscribe(System.out::println);
         Mono.empty().subscribe(System.out::println);
 
         Mono.justOrEmpty(Optional.empty()).subscribe(System.out::println);
-
-    }
+        // Mono.empty().filterWhen()
+        //         .flatMap()
+        //         .map()
+        //         .mapNotNull()
+        //         .switchIfEmpty(Mono.error(new RuntimeException()));
+     }
 
     @Test
     public void buffer() throws InterruptedException {
         Flux.range(1, 100)
                 .buffer(20)
                 .subscribe(System.out::println);
-        Flux.interval(Duration.of(1, ChronoUnit.SECONDS))
-                .buffer(Duration.of(5, ChronoUnit.SECONDS))
+        Flux.interval(Duration.ofSeconds(1))
+                .buffer(Duration.ofSeconds(1))
                 .take(2)// 一秒产生一个,5秒一次buffer,取两个buffer
                 .toStream().forEach(System.out::println);
         // .subscribe(System.out::println);不阔以!

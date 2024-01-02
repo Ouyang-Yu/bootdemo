@@ -1,46 +1,23 @@
 package OnJava;
 
-import kt.Person;
 import lombok.SneakyThrows;
+import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 
-import java.util.*;
+import java.util.List;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.IntFunction;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 /**
  * @author ouyangyu369@gmail.com
  * @time 2023-01-22 21:13
  */
 public class _5_8任务 {
-    class NapTask implements Runnable {
-        int id;
 
-        public NapTask(int id) {
-            this.id = id;
-        }
-
-        @Override
-        public String toString() {
-            return "NapTask{" +
-                    "id=" + id +
-                    '}';
-        }
-
-        @SneakyThrows
-        @Override
-        public void run() {
-            Thread.sleep(1000);
-            System.out.println(this + " " + Thread.currentThread().getName());
-        }
-    }
 
     @SneakyThrows
     @Test
@@ -48,12 +25,17 @@ public class _5_8任务 {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         IntStream.range(0, 10)
 
-                .mapToObj(NapTask::new)
+                // .mapToObj(NapTask::new)
+                .mapToObj(value ->
+                        (Runnable) () -> System.out.println(value + Thread.currentThread().getName())
+                )
                 .forEach(executor::execute);
+
+
         System.out.println("主线程所有任务已提交");
         executor.shutdown();// main告诉线程池不再接受新的任务,做完已有的就停止,线程池没有结束之后,main才结束
         while (!executor.isTerminated()) {
-            System.out.println(Thread.currentThread().getName() + "正在运行");
+            System.out.println(Thread.currentThread().getName() + "  正在运行");
             Thread.sleep(1000);
 
         }
@@ -69,7 +51,7 @@ public class _5_8任务 {
         Future<Integer> submit = executor.submit(() -> {
             System.out.println("");
             return 1;
-        });  // 所有的submit都会返回一个future00
+        });  // 所有的submit都会返回一个future
 
     }
 
@@ -77,44 +59,54 @@ public class _5_8任务 {
 
     @Test
     public void test2() {
-        ExecutorService executorService = Executors.newCachedThreadPool();
+        ExecutorService threadPool = Executors.newCachedThreadPool();
         IntStream.range(0, 10)
-                .mapToObj(getMapper(running))
-                .peek(executorService::execute)
+                .mapToObj(value ->
+                        (Runnable) () -> {
+                            while (running.get()) {
+                                sleepSecond(1);
+                                System.out.println(Thread.currentThread().getName());
+                            }
+                            System.out.println(value);
+                        }
+                )
+                .peek(threadPool::execute)
                 .forEach(it -> running.set(false));
-        executorService.shutdown();
+        threadPool.shutdown();
     }
 
-    @NotNull
-    private IntFunction<Runnable> getMapper(AtomicBoolean running) {
-        return new IntFunction<Runnable>() {
-            @Override
-            public Runnable apply(int value) {
-                return new Runnable() {
-                    @SneakyThrows
-                    @Override
-                    public void run() {
-                        while (running.get()) {
-                            Thread.sleep(1000);
-                        }
-                        System.out.println(value + " ");
-                    }
-                };
-            }
-        };
-    }
 
     @Test
     public void test3() {
-        List<Runnable> tasks = IntStream.range(0, 10)
-                .mapToObj(getMapper(running))
-                .toList();
-        tasks.forEach(it -> running.set(false));
-        tasks.stream()
-                .map(CompletableFuture::runAsync)
-                .forEach(CompletableFuture::join);
+        AtomicBoolean running = new AtomicBoolean(true);
+
+        IntStream.range(0, 10)
+                .mapToObj(value -> (Runnable) () -> {
+                    while (running.get()) {
+                        sleepSecond(1);
+                        System.out.println(Thread.currentThread().getName());
+                    }
+                    System.out.println(value);
+                })
+                .parallel()
+                .peek(runnable -> running.set(false))
+                .map(CompletableFuture::runAsync)// 10个runnable 映射为 异步的 CompletableFuture
+                .forEach(CompletableFuture::join);// 10 个异步的 CompletableFuture的join
     }
 
+
+    @NotNull
+    private IntFunction<Runnable> getMapper(AtomicBoolean running) {
+        return value -> (Runnable) () -> {
+            while (running.get()) {
+                sleepSecond(1);
+                System.out.println(Thread.currentThread().getName());
+            }
+            System.out.println(value + " ");
+        };
+    }
+
+    @ToString
     static class Machine {
         private final int id;
         private State state = State.ONE;
@@ -124,8 +116,7 @@ public class _5_8任务 {
         }
 
         public enum State {
-            ONE, TWO, THREE,
-            ;
+            ONE, TWO, THREE;
 
             State step() {
                 if (equals(THREE)) {
@@ -146,16 +137,10 @@ public class _5_8任务 {
             return machine;
         }
 
-        @Override
-        public String toString() {
-            return "Machine{" +
-                    "id=" + id +
-                    ", state=" + state +
-                    '}';
-        }
+
     }
 
-    @SneakyThrows
+
     @Test
     public void test异步join_立即返回后台继续工作() {
 
@@ -164,9 +149,11 @@ public class _5_8任务 {
                 .thenApplyAsync(Machine::work)
                 .thenApplyAsync(Machine::work)
                 .thenApplyAsync(Machine::work)
-                .join();
+                .join();// 异步没有最后join,都不会发生
+        CompletableFuture.runAsync(() -> System.out.println(1));
 
     }
+
 
     @Test
     public void test同步_完成工作后返回() {
@@ -174,137 +161,116 @@ public class _5_8任务 {
                 .thenApply(Machine::work)
                 .thenApply(Machine::work)
                 .thenApply(Machine::work)
-                .thenApply(Machine::work);
+                .thenApply(Machine::work);// 同步好像加个join也没区别?
     }
 
-//    CompletableFuture<Integer> future(Integer integer) {
-//        return CompletableFuture.completedFuture(integer);
-//    }
+    @Test
+    public void dddd() {
+        List<CompletableFuture<Integer>> collect = IntStream.range(1, 10)
+                .mapToObj(i ->
+                        CompletableFuture.supplyAsync(
+                                        () -> {
+
+                                            if (i == 5) {
+                                                throw new NullPointerException();
+                                            }
+                                            sleepSecond(i);
+                                            System.out.println(i);
+                                            return i;
+                                        }
+                                )
+
+                                .exceptionally(throwable -> {  //   如果这里不处理异常，那么异常会在所有任务完成后抛出
+                                    sleepSecond(1);
+                                    return 555;
+                                })
+                ).toList();
+        CompletableFuture.allOf(collect.toArray(new CompletableFuture[]{})).join();
+
+    }
+
 
     @Test
     public void test6() throws ExecutionException, InterruptedException {
+
+
         System.out.println(
                 CompletableFuture.completedFuture(1).get()
         );
         CompletableFuture.completedFuture(2)
                 .thenRunAsync(() -> System.out.println("thenRunAsync"))
                 .get();
-        CompletableFuture.completedFuture(4)
-                .thenAcceptAsync(integer -> System.out.println("" + integer))
-                .get()
-        ;
+        CompletableFuture<Void> future = CompletableFuture.completedFuture(4)
+                .thenAcceptAsync(integer -> System.out.println("" + integer));
+        //
 
-        /**
-         *  1.有返回值的future 一定要get   没有返回值的future 可以不写get不会立刻执行
-         *  2.then是future对象的方法 没有then是静态方法
-         *  3.run方法执行 空空函数   accept  方法执行 消费函数  supply执行生产函数  apply 接受function
+        future.get();
+
+        /*
+
+         *  2.then是future对象的方法 没有then是静态方法,是第一次,可以completedFuture完成的任务,也可以异步产生一个任务
+         *  3.run方法执行 空空函数  accept  方法执行 消费函数  supply执行生产函数  apply 接受function
+         *  Async结尾的函数异步执行,默认通过ForkJoinPool实现,也可以在第二个参数里指定线程池
          */
 
-        CompletableFuture.runAsync(() -> System.out.println("runAsync is static")).get();
-        System.out.println(
-                CompletableFuture.supplyAsync(() -> 99).get()
-        );
-        CompletableFuture.completedFuture(4)
-                .thenAcceptAsync(System.out::println)
-                .get();
-        System.out.println(CompletableFuture.completedFuture(5)
-                .thenApplyAsync(integer -> integer + 42)
-                .get());
+
+        CompletableFuture<Void> isStatic = CompletableFuture.runAsync(() -> System.out.println("runAsync is static"));
+
+
+        CompletableFuture<Integer> future1 = CompletableFuture.completedFuture(5)
+                .thenApplyAsync(integer -> integer + 42);
+
+        CompletableFuture<Integer> future2 = CompletableFuture.completedFuture(5)
+                .thenApplyAsync(integer -> integer + 2);
+
+        Short join = future1.applyToEither(future2, Integer::shortValue)
+                .join();
 
         Integer x = CompletableFuture.completedFuture(6)
                 .thenComposeAsync(integer -> CompletableFuture.completedFuture(integer + 99))
                 .get();   // compose 和apply类似 也是接受一个function ,但compose返回值必须是future
-        System.out.println(
-                x
-        );
 
-        CompletableFuture<Object> f = new CompletableFuture<>();
-        f.complete(9);
-        System.out.println(f.get());
-
-        System.out.println(
-                new CompletableFuture<>().getNow(777)
-        );
 
     }
 
-
-    @Test
-    public void d() {
-        ArrayList<LineCoverSqlDTO> lineCoverSqlDTOS = new ArrayList<LineCoverSqlDTO>() {{
-            add(new LineCoverSqlDTO("2", "1", 2.0));
-            add(new LineCoverSqlDTO("1", "0", 1.0));
-            add(new LineCoverSqlDTO("3", "2", 3.0));
-            add(new LineCoverSqlDTO("4", "1", 4.0));
-        }};
-
-        for (LineCoverSqlDTO sqlDTO : lineCoverSqlDTOS) {
-            sqlDTO.setAllSubTotalLength(getAllSubTotalLength(sqlDTO, lineCoverSqlDTOS));
+    private void sleepSecond(int second) {
+        try {
+            Thread.sleep(second * 1000L);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
-        lineCoverSqlDTOS.forEach(System.out::println);
-
-    }
-
-    private Double getAllSubTotalLength(LineCoverSqlDTO sqlDTO, List<LineCoverSqlDTO> list) {
-        return sqlDTO.getTotalLength() +
-                list.stream()
-                        .filter(record -> record.getParentBureauId().equals(sqlDTO.getBureauId()))
-                        .map(record -> getAllSubTotalLength(record, list))
-                        .reduce((double) 0, Double::sum);
     }
 
     @Test
-    public void d多少的() {
-        String str = "Hello, World!";
-        Pattern pattern = Pattern.compile("[a-zA-Z]");
-        Matcher matcher = pattern.matcher(str);
-        if (matcher.find()) {
-            int position = matcher.start();
-            System.out.println("The first letter is at position " + position);
-        } else {
-            System.out.println("No letter found in the string");
-        }
-        System.out.println(pattern.matcher("湖北").start());
+    public void furut() {
+        List<CompletableFuture<Void>> collect = Stream.generate(() ->
+                        CompletableFuture.runAsync(() -> {
+                            sleepSecond(1);
+
+                            System.out.println(Thread.currentThread().getName());
+                        })
+                )
+                .limit(10)
+                .toList();
+        CompletableFuture.allOf(collect.toArray(new CompletableFuture[0]))
+                .join();
+
+        var futures = IntStream.range(1, 10)
+                .mapToObj(i ->
+                        CompletableFuture.supplyAsync(() -> {
+                            sleepSecond(i);
+                            System.out.println(i + " " + Thread.currentThread().getName());
+                            return i;
+                        })
+                )
+                .toList();
+        Void all = CompletableFuture.allOf(futures.toArray(new CompletableFuture[]{}))
+                .join();
+        Object any = CompletableFuture.anyOf(futures.toArray(new CompletableFuture[]{}))
+                .join();
+        System.out.println("any = " + any);
     }
 
-    @Test
-    public void dsd() {
-        AtomicInteger atomicInteger = new AtomicInteger(1);
-        int next = atomicInteger.getAndAccumulate(1, Integer::sum);
-        System.out.println("next = " + next);
-        System.out.println("atomicInteger = " + atomicInteger);
-    }
-
-    @Test
-    public void sort() {
-
-        List<Person> people = Arrays.asList(
-                new Person("Alice", 20),
-                new Person("Bob", 25),
-                new Person("Charlie", 18),
-                new Person("David", 30),
-                new Person("Evelyn", 22),
-                new Person("Frankie", 28),
-                new Person("Grace", 24),
-                new Person("Henry", 21)
-        );
-
-        Map<String, List<Person>> groupedByName = people.stream()
-                .collect(
-                        Collectors.groupingBy(
-                                Person::getName,
-                                Collectors.collectingAndThen(
-                                        Collectors.toList(),
-                                        list -> {
-                                            list.sort(Comparator.comparing(Person::getAge));
-                                            return list;
-                                        }
-                                )
-                        )
-                );
-
-        System.out.println(groupedByName);
-    }
 
 }
 

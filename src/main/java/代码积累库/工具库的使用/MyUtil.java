@@ -1,4 +1,4 @@
-package 代码积累库.工具类;
+package 代码积累库.工具库的使用;
 
 import lombok.SneakyThrows;
 
@@ -21,10 +21,10 @@ public class MyUtil {
             }
         };
 
+        boolean b = Arrays.stream(obj.getClass().getDeclaredFields()).anyMatch(predicate);
 
         return Arrays.stream(obj.getClass().getDeclaredFields())
                 .anyMatch(field -> fieldValueNull(field, obj));
-
     }
 
     @SneakyThrows
